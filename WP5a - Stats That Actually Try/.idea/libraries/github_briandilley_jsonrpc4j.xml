@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="github.briandilley.jsonrpc4j" type="repository">
+    <properties maven-id="com.github.briandilley.jsonrpc4j:jsonrpc4j:1.6" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/briandilley/jsonrpc4j/jsonrpc4j/1.6/jsonrpc4j-1.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/iharder/base64/2.3.9/base64-2.3.9.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.30/slf4j-api-1.7.30.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.10.2/jackson-core-2.10.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.10.2/jackson-databind-2.10.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.10.2/jackson-annotations-2.10.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/commons-codec/commons-codec/1.10/commons-codec-1.10.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore-nio/4.4.5/httpcore-nio-4.4.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/httpcomponents/httpcore/4.4.5/httpcore-4.4.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
