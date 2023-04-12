@@ -19,8 +19,8 @@ import java.util.stream.Stream;
 import static com.pocketrice.AnsiCode.*;
 
 public class Wordworm {
-    private File df;
-    private long data;
+    private final File df;
+    private final long data;
 
     public Wordworm(File file) throws IOException {
         df = file;
@@ -41,7 +41,7 @@ public class Wordworm {
         ops.put("averagelength", 1);
         ops.put("sameends", 1);
 
-        ops.put("commonletters", 2);
+        ops.put("letterfreq", 2);
         ops.put("commonlength", 2);
         ops.put("commonends", 2);
         ops.put("palindrome", 2);
@@ -82,7 +82,7 @@ public class Wordworm {
                             lenMap.get(s.length()).add(s);
                     });
 
-                    System.out.println("Longest word (" + lenMap.lastKey() + " letters): " + ANSI_PURPLE + grammaticParse(lenMap.lastEntry().getValue(), ",") + "" + ANSI_RESET);
+                    System.out.println("Longest word (" + lenMap.lastKey() + " letters): " + ANSI_PURPLE + grammaticParse(lenMap.lastEntry().getValue(), ",") + ANSI_RESET);
                 }
 
                 case "novowels" -> {
@@ -104,7 +104,7 @@ public class Wordworm {
 
 
                 // Level 2
-                case "commonletters" -> {
+                case "letterfreq" -> {
                     Map<Character, Integer> freqMap = new HashMap<>(); // Using a treemap instead of hashmap allows for natural sorting.
 
                     read().forEach(s -> {
@@ -130,9 +130,9 @@ public class Wordworm {
                             lenMap.get(s.length()).add(s);
                     });
 
-                    Map.Entry<Integer, List<String>> commonEntry = lenMap.entrySet().stream().max((e1, e2) -> Integer.compare(e1.getValue().size(), e2.getValue().size())).orElseThrow();
+                    Map.Entry<Integer, List<String>> commonEntry = lenMap.entrySet().stream().max(Comparator.comparingInt(e -> e.getValue().size())).orElseThrow();
                     String percent = percentify(commonEntry.getValue().size(), data);
-                    System.out.println("Most common length " + "[" + percent + "] of " + commonEntry.getKey() + " letters : " + ANSI_PURPLE + grammaticParse(commonEntry.getValue(), ",") + ANSI_RESET);
+                    System.out.println("Most common length " + "[" + percent + "] of " + commonEntry.getKey() + " letters: " + ANSI_PURPLE + grammaticParse(commonEntry.getValue(), ",") + ANSI_RESET);
                     System.out.println("\nTotal of " + commonEntry.getValue().size() + " words of most common length.");
                 }
 
@@ -148,9 +148,9 @@ public class Wordworm {
                         endMap.put(endChar, (endMap.containsKey(endChar)) ? endMap.get(endChar) + 1 : 1);
                     });
 
-
-                    Map.Entry<Character, Integer> begMax = begMap.entrySet().stream().max((e1, e2) -> e1.getValue().compareTo(e2.getValue())).orElseThrow();
-                    Map.Entry<Character, Integer> endMax = endMap.entrySet().stream().max((e1, e2) -> e1.getValue().compareTo(e2.getValue())).orElseThrow();
+                    // Optimization of Comparator.comparing(Map.Entry::getValue)
+                    Map.Entry<Character, Integer> begMax = begMap.entrySet().stream().max(Map.Entry.comparingByValue()).orElseThrow();
+                    Map.Entry<Character, Integer> endMax = endMap.entrySet().stream().max(Map.Entry.comparingByValue()).orElseThrow();
 
                     String begPercent = percentify(begMax.getValue(), data);
                     String endPercent = percentify(endMax.getValue(), data);
@@ -179,7 +179,8 @@ public class Wordworm {
                         }
                     });
 
-                    Map.Entry<String, Integer> maxPair = pairMap.entrySet().stream().max((e1, e2) -> e1.getValue().compareTo(e2.getValue())).orElseThrow();
+                    // Optimization of Comparator.comparing(Map.Entry::getValue());
+                    Map.Entry<String, Integer> maxPair = pairMap.entrySet().stream().max(Map.Entry.comparingByValue()).orElseThrow();
                     String percent = percentify(maxPair.getValue(), data);
                     System.out.println("Most common pair [" + percent + "]: " + maxPair.getKey());
                 }
@@ -197,7 +198,7 @@ public class Wordworm {
                     putAll(scrabblePts, Map.entry('x', 8), Map.entry('j', 8));
                     putAll(scrabblePts, Map.entry('q', 10), Map.entry('z', 10));
 
-                    // Plucked from "commonletters"
+                    // Plucked from "letterfreq"
                     Map<Character, Integer> freqMap = new HashMap<>();
                     AtomicLong charCount = new AtomicLong(); // This is odd, but atomic is necessary for changing outside-scope vals in lambda.
 
@@ -250,7 +251,10 @@ public class Wordworm {
                         boolean isNonDesc = true;
 
                         for (int i = 0; i < s.length() - 1; i++) {
-                            if (s.charAt(i) > s.charAt(i + 1)) isNonDesc = false;
+                            if (s.charAt(i) > s.charAt(i + 1)) {
+                                isNonDesc = false;
+                                break;
+                            }
                         }
 
                         if (isNonDesc) regStrs.add(s);
